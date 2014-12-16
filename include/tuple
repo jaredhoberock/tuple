@@ -89,18 +89,6 @@ class tuple<Type1,Types...> : private tuple<Types...>
 
 
     __TUPLE_ANNOTATION
-    explicit tuple(const tuple& other)
-      : super_t(other), val_(other.val_)
-    {}
-
-
-    __TUPLE_ANNOTATION
-    explicit tuple(tuple&& other)
-      : super_t(std::move(other)), val_(std::move(other.val_))
-    {}
-
-
-    __TUPLE_ANNOTATION
     explicit tuple(const Type1& arg1, const Types&... args)
       : super_t(args...), val_(arg1)
     {}
@@ -110,6 +98,25 @@ class tuple<Type1,Types...> : private tuple<Types...>
     __TUPLE_ANNOTATION
     explicit tuple(UType1&& arg1, UTypes&&... args)
       : super_t(std::forward<UTypes...>(args)...), val_(std::forward<UType1>(arg1))
+    {}
+
+
+    template<class UType1, class... UTypes>
+    __TUPLE_ANNOTATION
+    explicit tuple(const tuple<UType1,UTypes...>& other)
+      : super_t(other), val_(std::get<0>(other))
+    {}
+
+
+    __TUPLE_ANNOTATION
+    tuple(const tuple& other)
+      : super_t(other), val_(other.val_)
+    {}
+
+
+    __TUPLE_ANNOTATION
+    tuple(tuple&& other)
+      : super_t(std::move(other)), val_(std::move(other.val_))
     {}
 
 

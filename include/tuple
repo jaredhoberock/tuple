@@ -1,7 +1,7 @@
 #pragma once
 
 #include <type_traits>
-#include <cstddef>
+#include <stddef.h>
 #include <utility>
 
 // allow the user to define an annotation to apply to these functions
@@ -300,6 +300,14 @@ __TUPLE_ANNOTATION
 tuple<typename std::decay<Types>::type...> make_tuple(Types&&... args)
 {
   return tuple<typename std::decay<Types>::type...>(std::forward<Types>(args)...);
+}
+
+
+template<class... Types>
+__TUPLE_ANNOTATION
+tuple<Types&...> tie(Types&... args)
+{
+  return tuple<Types&...>(args...);
 }
 
 

@@ -70,24 +70,6 @@ struct tuple_size<__TUPLE_NAMESPACE::tuple<Types...>>
 {};
 
 
-template<class T>
-struct tuple_size<const T>
-  : std::integral_constant<size_t, tuple_size<T>::value>
-{};
-
-
-template<class T>
-struct tuple_size<volatile T>
-  : std::integral_constant<size_t, tuple_size<T>::value>
-{};
-
-
-template<class T>
-struct tuple_size<const volatile T>
-  : std::integral_constant<size_t, tuple_size<T>::value>
-{};
-
-
 } // end std
 
 

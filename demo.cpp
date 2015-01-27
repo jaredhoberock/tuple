@@ -96,6 +96,12 @@ int main()
       float&&
     >::value
   ));
+      
+  using type3 = foo::tuple<int,int,int>;
+  type3 t5(1,2,3);
+  assert(std::get<0>(t5) == 1);
+  assert(std::get<1>(t5) == 2);
+  assert(std::get<2>(t5) == 3);
 
   return 0;
 }

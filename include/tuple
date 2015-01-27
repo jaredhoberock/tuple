@@ -95,7 +95,7 @@ class tuple<Type1,Types...>
     __TUPLE_ANNOTATION
     explicit tuple(UType1&& arg1, UTypes&&... args)
       : head_(std::forward<UType1>(arg1)),
-        tail_(std::forward<UTypes...>(args)...)
+        tail_(std::forward<UTypes>(args)...)
     {}
 
 
@@ -135,8 +135,8 @@ class tuple<Type1,Types...>
     __TUPLE_ANNOTATION
     tuple& operator=(const tuple& other)
     {
-      other.head_ = other.head_;
-      other.tail_ = other.tail_;
+      head_ = other.head_;
+      tail_ = other.tail_;
       return *this;
     }
 
@@ -144,8 +144,8 @@ class tuple<Type1,Types...>
     __TUPLE_ANNOTATION
     tuple& operator=(tuple&& other)
     {
-      other.head_ = std::move(other.head_);
-      other.tail_ = std::move(other.tail_);
+      head_ = std::move(other.head_);
+      tail_ = std::move(other.tail_);
       return *this;
     }
 
@@ -154,8 +154,8 @@ class tuple<Type1,Types...>
     __TUPLE_ANNOTATION
     tuple& operator=(const tuple<UTypes...>& other)
     {
-      other.head_ = other.head_;
-      other.tail_ = other.tail_;
+      head_ = other.head_;
+      tail_ = other.tail_;
       return *this;
     }
 
@@ -164,8 +164,8 @@ class tuple<Type1,Types...>
     __TUPLE_ANNOTATION
     tuple& operator=(tuple<UTypes...>&& other)
     {
-      other.head_ = std::move(other.head_);
-      other.tail_ = std::move(other.tail_);
+      head_ = std::move(other.head_);
+      tail_ = std::move(other.tail_);
       return *this;
     }
 

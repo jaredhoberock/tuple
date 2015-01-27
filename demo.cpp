@@ -103,6 +103,16 @@ int main()
   assert(std::get<1>(t5) == 2);
   assert(std::get<2>(t5) == 3);
 
+  type3 t6{};
+  assert(std::get<0>(t6) == 0);
+  assert(std::get<1>(t6) == 0);
+  assert(std::get<2>(t6) == 0);
+
+  t6 = t5;
+  assert(std::get<0>(t6) == 1);
+  assert(std::get<1>(t6) == 2);
+  assert(std::get<2>(t6) == 3);
+
   return 0;
 }
 

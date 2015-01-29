@@ -290,7 +290,12 @@ class tuple<Type1,Types...>
 };
 
 
-template<> class tuple<> {};
+template<> class tuple<>
+{
+  public:
+    __TUPLE_ANNOTATION
+    void swap(tuple&) {}
+};
 
 
 template<class... Types>

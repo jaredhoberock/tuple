@@ -113,6 +113,16 @@ int main()
   assert(std::get<1>(t6) == 2);
   assert(std::get<2>(t6) == 3);
 
+  using type4 = foo::tuple<type3,type3>;
+  type4 t7(type3(1,2,3), type3(4,5,6));
+  assert(std::get<0>(std::get<0>(t7)) == 1);
+  assert(std::get<1>(std::get<0>(t7)) == 2);
+  assert(std::get<2>(std::get<0>(t7)) == 3);
+
+  assert(std::get<0>(std::get<1>(t7)) == 4);
+  assert(std::get<1>(std::get<1>(t7)) == 5);
+  assert(std::get<2>(std::get<1>(t7)) == 6);
+
   return 0;
 }
 

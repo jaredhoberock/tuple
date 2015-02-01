@@ -44,6 +44,7 @@
 // allow the user to define a namespace for these functions
 #ifndef __TUPLE_NAMESPACE
 #define __TUPLE_NAMESPACE std
+#define __TUPLE_NAMESPACE_NEEDS_UNDEF
 #endif
 
 
@@ -539,5 +540,10 @@ typename std::tuple_element<i, __TUPLE_NAMESPACE::tuple<UTypes...>>::type &&
 #ifdef __TUPLE_ANNOTATION_NEEDS_UNDEF
 #undef __TUPLE_ANNOTATION
 #undef __TUPLE_ANNOTATION_NEEDS_UNDEF
+#endif
+
+#ifdef __TUPLE_NAMESPACE_NEEDS_UNDEF
+#undef __TUPLE_NAMESPACE
+#undef __TUPLE_NAMESPACE_NEEDS_UNDEF
 #endif
 

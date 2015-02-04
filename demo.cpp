@@ -123,6 +123,23 @@ int main()
   assert(std::get<1>(std::get<1>(t7)) == 5);
   assert(std::get<2>(std::get<1>(t7)) == 6);
 
+  type3 t8(1,2,3);
+  assert(std::get<0>(t5) == 1);
+  assert(std::get<1>(t5) == 2);
+  assert(std::get<2>(t5) == 3);
+
+  int a, b, c;
+  foo::tie(a,b,c) = t5;
+  assert(a == 1);
+  assert(b == 2);
+  assert(c == 3);
+
+  auto t9 = foo::make_tuple(std::string("hi"));
+  foo::tuple<std::string> t10;
+  t10 = std::move(t9);
+  assert(std::get<0>(t9) == "");
+  assert(std::get<0>(t10) == "hi");
+
   return 0;
 }
 

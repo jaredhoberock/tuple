@@ -601,6 +601,120 @@ typename std::tuple_element<i, __TUPLE_NAMESPACE::tuple<UTypes...>>::type &&
 } // end std
 
 
+// implement relational operators
+namespace __TUPLE_NAMESPACE
+{
+
+
+__TUPLE_ANNOTATION
+  bool __tuple_all()
+{
+  return true;
+}
+
+
+__TUPLE_ANNOTATION
+  bool __tuple_all(bool t)
+{
+  return t;
+}
+
+
+template<typename... Bools>
+__TUPLE_ANNOTATION
+  bool __tuple_all(bool t, Bools... ts)
+{
+  return t && __tuple_all(ts...);
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator==(const tuple<TTypes...>& t, const tuple<UTypes...>& u);
+
+
+template<class... TTypes, class... UTypes, size_t... I>
+__TUPLE_ANNOTATION
+  bool __tuple_eq(const tuple<TTypes...>& t, const tuple<UTypes...>& u, __tuple_index_sequence<I...>)
+{
+  return __tuple_all((std::get<I>(t) == std::get<I>(u))...);
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator==(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return __tuple_eq(t, u, __tuple_make_index_sequence<sizeof...(TTypes)>{});
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator<(const tuple<TTypes...>& t, const tuple<UTypes...>& u);
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool __tuple_lt(const tuple<TTypes...>& t, const tuple<UTypes...>& u, __tuple_index_sequence<>)
+{
+  return false;
+}
+
+
+template<size_t I, class... TTypes, class... UTypes, size_t... Is>
+__TUPLE_ANNOTATION
+  bool __tuple_lt(const tuple<TTypes...>& t, const tuple<UTypes...>& u, __tuple_index_sequence<I, Is...>)
+{
+  return (   std::get<I>(t) < std::get<I>(u)
+          || (!(std::get<I>(u) < std::get<I>(t))
+              && __tuple_lt(t, u, typename __tuple_make_index_sequence_impl<I+1, __tuple_index_sequence<>, sizeof...(TTypes)>::type{})));
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator<(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return __tuple_lt(t, u, __tuple_make_index_sequence<sizeof...(TTypes)>{});
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator!=(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return !(t == u);
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator>(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return u < t;
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator<=(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return !(u < t);
+}
+
+
+template<class... TTypes, class... UTypes>
+__TUPLE_ANNOTATION
+  bool operator>=(const tuple<TTypes...>& t, const tuple<UTypes...>& u)
+{
+  return !(t < u);
+}
+
+
+} // end namespace
+
+
 #ifdef __TUPLE_ANNOTATION_NEEDS_UNDEF
 #undef __TUPLE_ANNOTATION
 #undef __TUPLE_ANNOTATION_NEEDS_UNDEF

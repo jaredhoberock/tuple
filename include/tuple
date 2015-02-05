@@ -185,6 +185,13 @@ class __tuple_leaf
       mutable_get() = other.const_get();
       return *this;
     }
+    
+    __TUPLE_ANNOTATION
+    __tuple_leaf& operator=(const __tuple_leaf& other)
+    {
+      mutable_get() = other.const_get();
+      return *this;
+    }
 
     template<class U,
              class = typename std::enable_if<
@@ -285,6 +292,13 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
     __tuple_base(const __tuple_base<__tuple_index_sequence<I...>,UTypes...>& other)
       : __tuple_leaf<I,Types>(other)...
     {}
+
+    __TUPLE_ANNOTATION
+    __tuple_base& operator=(const __tuple_base& other)
+    {
+      swallow((mutable_leaf<I>() = other.template const_leaf<I>())...);
+      return *this;
+    }
 
     template<class... UTypes,
              class = typename std::enable_if<

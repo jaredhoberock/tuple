@@ -171,6 +171,9 @@ int main()
   assert(foo::make_tuple(1,2,3) < foo::make_tuple(1,2,4));
   assert(foo::make_tuple(1,2,4) > foo::make_tuple(1,2,3));
 
+  auto x = foo::tie(b);
+  x = x;  // ensure that tuple<tuple<int,int,int>&>::operator=(tuple<tuple<int,int,int>&>) has not been deleted
+
   return 0;
 }
 

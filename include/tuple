@@ -167,6 +167,12 @@ class __tuple_leaf
     __TUPLE_ANNOTATION
     __tuple_leaf(U&& arg) : val_(std::forward<U>(arg)) {}
 
+    __TUPLE_ANNOTATION
+    __tuple_leaf(const __tuple_leaf& other) : val_(other.const_get()) {}
+
+    __TUPLE_ANNOTATION
+    __tuple_leaf(__tuple_leaf&& other) : val_(std::forward<T>(other.mutable_get())) {}
+
     template<class U,
              class = typename std::enable_if<
                std::is_constructible<T,U>::value
@@ -193,6 +199,13 @@ class __tuple_leaf
       return *this;
     }
 
+    __TUPLE_ANNOTATION
+    __tuple_leaf& operator=(__tuple_leaf&& other)
+    {
+      mutable_get() = std::forward<T>(other.mutable_get());
+      return *this;
+    }
+
     template<class U,
              class = typename std::enable_if<
                std::is_assignable<T,U&&>::value
@@ -200,7 +213,7 @@ class __tuple_leaf
     __TUPLE_ANNOTATION
     __tuple_leaf& operator=(__tuple_leaf<I,U>&& other)
     {
-      mutable_get() = std::move(other.mutable_get());
+      mutable_get() = std::forward<U>(other.mutable_get());
       return *this;
     }
 
@@ -281,6 +294,18 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
     {}
 
 
+    __TUPLE_ANNOTATION
+    __tuple_base(const __tuple_base& other)
+      : __tuple_leaf<I,Types>(other)...
+    {}
+
+
+    __TUPLE_ANNOTATION
+    __tuple_base(__tuple_base&& other)
+      : __tuple_leaf<I,Types>(std::move(other))...
+    {}
+
+
     template<class... UTypes,
              class = typename std::enable_if<
                (sizeof...(Types) == sizeof...(UTypes)) &&
@@ -293,10 +318,20 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
       : __tuple_leaf<I,Types>(other)...
     {}
 
+
+
+
     __TUPLE_ANNOTATION
     __tuple_base& operator=(const __tuple_base& other)
     {
       swallow((mutable_leaf<I>() = other.template const_leaf<I>())...);
+      return *this;
+    }
+
+    __TUPLE_ANNOTATION
+    __tuple_base& operator=(__tuple_base&& other)
+    {
+      swallow((mutable_leaf<I>() = std::move(other.template mutable_leaf<I>()))...);
       return *this;
     }
 

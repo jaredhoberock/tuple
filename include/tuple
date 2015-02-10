@@ -474,6 +474,7 @@ class tuple
       return *this;
     }
 
+    // XXX needs enable_if
     template<class... UTypes>
     __TUPLE_ANNOTATION
     tuple& operator=(const tuple<UTypes...>& other)
@@ -482,6 +483,7 @@ class tuple
       return *this;
     }
 
+    // XXX needs enable_if
     template<class... UTypes>
     __TUPLE_ANNOTATION
     tuple& operator=(tuple<UTypes...>&& other)

@@ -328,6 +328,38 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
       return *this;
     }
 
+    template<class UType1, class UType2,
+             class = typename std::enable_if<
+               (sizeof...(Types) == 2) &&
+               __tuple_and<
+                 std::is_assignable<__type_at<                            0,Types...>,const UType1&>,
+                 std::is_assignable<__type_at<sizeof...(Types) == 2 ? 1 : 0,Types...>,const UType2&>
+               >::value
+             >::type>
+    __TUPLE_ANNOTATION
+    __tuple_base& operator=(const std::pair<UType1,UType2>& p)
+    {
+      mutable_get<0>() = p.first;
+      mutable_get<1>() = p.second;
+      return *this;
+    }
+
+    template<class UType1, class UType2,
+             class = typename std::enable_if<
+               (sizeof...(Types) == 2) &&
+               __tuple_and<
+                 std::is_assignable<__type_at<                            0,Types...>,UType1&&>,
+                 std::is_assignable<__type_at<sizeof...(Types) == 2 ? 1 : 0,Types...>,UType2&&>
+               >::value
+             >::type>
+    __TUPLE_ANNOTATION
+    __tuple_base& operator=(std::pair<UType1,UType2>&& p)
+    {
+      mutable_get<0>() = std::move(p.first);
+      mutable_get<1>() = std::move(p.second);
+      return *this;
+    }
+
     template<size_t i>
     __TUPLE_ANNOTATION
     const __tuple_leaf<i,__type_at<i,Types...>>& const_leaf() const
@@ -492,7 +524,35 @@ class tuple
       return *this;
     }
 
-    // XXX TODO assign from pair
+    template<class UType1, class UType2,
+             class = typename std::enable_if<
+               (sizeof...(Types) == 2) &&
+               __tuple_and<
+                 std::is_assignable<__type_at<                            0,Types...>,const UType1&>,
+                 std::is_assignable<__type_at<sizeof...(Types) == 2 ? 1 : 0,Types...>,const UType2&>
+               >::value
+             >::type>
+    __TUPLE_ANNOTATION
+    tuple& operator=(const std::pair<UType1,UType2>& p)
+    {
+      base_.operator=(p);
+      return *this;
+    }
+
+    template<class UType1, class UType2,
+             class = typename std::enable_if<
+               (sizeof...(Types) == 2) &&
+               __tuple_and<
+                 std::is_assignable<__type_at<                            0,Types...>,UType1&&>,
+                 std::is_assignable<__type_at<sizeof...(Types) == 2 ? 1 : 0,Types...>,UType2&&>
+               >::value
+             >::type>
+    __TUPLE_ANNOTATION
+    tuple& operator=(std::pair<UType1,UType2>&& p)
+    {
+      base_.operator=(std::move(p));
+      return *this;
+    }
 
     __TUPLE_ANNOTATION
     void swap(tuple& other)

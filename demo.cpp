@@ -10,6 +10,11 @@ int main()
   assert(std::tuple_size<type0>::value == 0);
   assert((std::is_empty<std::tuple_element<0,type0>>::value == true));
 
+  assert(type0{} == type0{});
+  assert(!(type0{} != type0{}));
+  assert(!(type0{} < type0{}));
+  assert(!(type0{} > type0{}));
+
   using type1 = foo::tuple<int>;
   assert(std::tuple_size<type1>::value == 1);
   assert((
@@ -25,6 +30,15 @@ int main()
   type1 t2(13);
   assert(std::get<0>(t2) == 13);
 
+  assert(t1 <= t2);
+  assert(t1 <  t2);
+
+  assert(t2 >= t2);
+  assert(t2 >  t1);
+
+  assert(t1 == t1);
+  assert(t1 <= t1);
+  assert(t1 >= t1);
 
   using type2 = foo::tuple<int, float>;
   assert(std::tuple_size<type2>::value == 2);
@@ -108,10 +122,20 @@ int main()
   assert(std::get<1>(t6) == 0);
   assert(std::get<2>(t6) == 0);
 
+  assert(t5 != t6);
+  assert(t5 >  t6);
+  assert(t6 <  t5);
+  assert(t5 >= t6);
+  assert(t6 <= t5);
+
   t6 = t5;
   assert(std::get<0>(t6) == 1);
   assert(std::get<1>(t6) == 2);
   assert(std::get<2>(t6) == 3);
+
+  assert(t5 == t6);
+  assert(t5 <= t6);
+  assert(t5 >= t6);
 
   using type4 = foo::tuple<type3,type3>;
   type4 t7(type3(1,2,3), type3(4,5,6));
@@ -134,11 +158,21 @@ int main()
   assert(b == 2);
   assert(c == 3);
 
+  assert(foo::tie(a,b,c) == t5);
+  assert(foo::tie(a,b,c) <= t5);
+  assert(foo::tie(a,b,c) >= t5);
+
   auto t9 = foo::make_tuple(std::string("hi"));
   foo::tuple<std::string> t10;
   t10 = std::move(t9);
   assert(std::get<0>(t9) == "");
   assert(std::get<0>(t10) == "hi");
+
+  assert(foo::make_tuple(1,2,3) < foo::make_tuple(1,2,4));
+  assert(foo::make_tuple(1,2,4) > foo::make_tuple(1,2,3));
+
+  auto x = foo::tie(b);
+  x = x;  // ensure that tuple<tuple<int,int,int>&>::operator=(tuple<tuple<int,int,int>&>) has not been deleted
 
   return 0;
 }

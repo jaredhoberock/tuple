@@ -153,9 +153,76 @@ struct __tuple_make_index_sequence_impl<End, __tuple_index_sequence<Indices...>,
 template<size_t N>
 using __tuple_make_index_sequence = typename __tuple_make_index_sequence_impl<0, __tuple_index_sequence<>, N>::type;
 
-template<size_t I, class T>
-class __tuple_leaf
+
+template<class T>
+struct __tuple_use_empty_base_class_optimization
+  : std::integral_constant<
+      bool,
+      std::is_empty<T>::value
+#if __cplusplus >= 201402L
+      && !std::is_final<T>::value
+#endif
+    >
+{};
+
+
+template<class T, bool = __tuple_use_empty_base_class_optimization<T>::value>
+class __tuple_leaf_base
 {
+  public:
+    __TUPLE_ANNOTATION
+    __tuple_leaf_base() = default;
+
+    template<class U>
+    __TUPLE_ANNOTATION
+    __tuple_leaf_base(U&& arg) : val_(std::forward<U>(arg)) {}
+
+    __TUPLE_ANNOTATION
+    const T& const_get() const
+    {
+      return val_;
+    }
+
+    __TUPLE_ANNOTATION
+    T& mutable_get()
+    {
+      return val_;
+    }
+
+  private:
+    T val_;
+};
+
+template<class T>
+class __tuple_leaf_base<T,true> : public T
+{
+  public:
+    __TUPLE_ANNOTATION
+    __tuple_leaf_base() = default;
+
+    template<class U>
+    __TUPLE_ANNOTATION
+    __tuple_leaf_base(U&& arg) : T(std::forward<U>(arg)) {}
+
+    __TUPLE_ANNOTATION
+    const T& const_get() const
+    {
+      return *this;
+    }
+  
+    __TUPLE_ANNOTATION
+    T& mutable_get()
+    {
+      return *this;
+    }
+};
+
+template<size_t I, class T>
+class __tuple_leaf : public __tuple_leaf_base<T>
+{
+  private:
+    using super_t = __tuple_leaf_base<T>;
+
   public:
     __TUPLE_ANNOTATION
     __tuple_leaf() = default;
@@ -165,20 +232,20 @@ class __tuple_leaf
                std::is_constructible<T,U>::value
              >::type>
     __TUPLE_ANNOTATION
-    __tuple_leaf(U&& arg) : val_(std::forward<U>(arg)) {}
+    __tuple_leaf(U&& arg) : super_t(std::forward<U>(arg)) {}
 
     __TUPLE_ANNOTATION
-    __tuple_leaf(const __tuple_leaf& other) : val_(other.const_get()) {}
+    __tuple_leaf(const __tuple_leaf& other) : super_t(other.const_get()) {}
 
     __TUPLE_ANNOTATION
-    __tuple_leaf(__tuple_leaf&& other) : val_(std::forward<T>(other.mutable_get())) {}
+    __tuple_leaf(__tuple_leaf&& other) : super_t(std::forward<T>(other.mutable_get())) {}
 
     template<class U,
              class = typename std::enable_if<
                std::is_constructible<T,U>::value
              >::type>
     __TUPLE_ANNOTATION
-    __tuple_leaf(const __tuple_leaf<I,U>& other) : val_(other.const_get()) {}
+    __tuple_leaf(const __tuple_leaf<I,U>& other) : super_t(other.const_get()) {}
 
 
     template<class U,
@@ -188,21 +255,21 @@ class __tuple_leaf
     __TUPLE_ANNOTATION
     __tuple_leaf& operator=(const __tuple_leaf<I,U>& other)
     {
-      mutable_get() = other.const_get();
+      this->mutable_get() = other.const_get();
       return *this;
     }
     
     __TUPLE_ANNOTATION
     __tuple_leaf& operator=(const __tuple_leaf& other)
     {
-      mutable_get() = other.const_get();
+      this->mutable_get() = other.const_get();
       return *this;
     }
 
     __TUPLE_ANNOTATION
     __tuple_leaf& operator=(__tuple_leaf&& other)
     {
-      mutable_get() = std::forward<T>(other.mutable_get());
+      this->mutable_get() = std::forward<T>(other.mutable_get());
       return *this;
     }
 
@@ -213,32 +280,17 @@ class __tuple_leaf
     __TUPLE_ANNOTATION
     __tuple_leaf& operator=(__tuple_leaf<I,U>&& other)
     {
-      mutable_get() = std::forward<U>(other.mutable_get());
+      this->mutable_get() = std::forward<U>(other.mutable_get());
       return *this;
-    }
-
-    __TUPLE_ANNOTATION
-    const T& const_get() const
-    {
-      return val_;
-    }
-  
-    __TUPLE_ANNOTATION
-    T& mutable_get()
-    {
-      return val_;
     }
 
     __TUPLE_ANNOTATION
     int swap(__tuple_leaf& other)
     {
       using std::swap;
-      swap(mutable_get(), other.mutable_get());
+      swap(this->mutable_get(), other.mutable_get());
       return 0;
     }
-
-  private:
-    T val_; // XXX apply empty base class optimization to this
 };
 
 template<class... Args>

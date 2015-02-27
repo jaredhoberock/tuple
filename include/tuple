@@ -543,7 +543,7 @@ class tuple : private __tuple_base<__tuple_make_index_sequence<sizeof...(Types)>
              >::type>
     __TUPLE_ANNOTATION
     tuple(const tuple<UTypes...>& other)
-      : super_t{other.base_}
+      : super_t{other.base()}
     {}
 
     template<class... UTypes,
@@ -555,7 +555,7 @@ class tuple : private __tuple_base<__tuple_make_index_sequence<sizeof...(Types)>
              >::type>
     __TUPLE_ANNOTATION
     tuple(tuple<UTypes...>&& other)
-      : super_t{std::move(other.base_)}
+      : super_t{std::move(other.base())}
     {}
 
     template<class UType1, class UType2,
@@ -788,7 +788,7 @@ typename std::tuple_element<i, __TUPLE_NAMESPACE::tuple<UTypes...>>::type &&
 {
   using type = typename std::tuple_element<i, __TUPLE_NAMESPACE::tuple<UTypes...>>::type;
 
-  auto&& leaf = static_cast<__TUPLE_NAMESPACE::__tuple_leaf<i,type>&&>(t.base_);
+  auto&& leaf = static_cast<__TUPLE_NAMESPACE::__tuple_leaf<i,type>&&>(t.base());
 
   return static_cast<type&&>(leaf.mutable_get());
 }

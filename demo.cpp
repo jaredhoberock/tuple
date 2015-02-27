@@ -174,6 +174,30 @@ int main()
   auto x = foo::tie(b);
   x = x;  // ensure that tuple<tuple<int,int,int>&>::operator=(tuple<tuple<int,int,int>&>) has not been deleted
 
+  {
+    int x;
+    foo::tie(x, foo::ignore) = foo::make_tuple(13, std::string("hello"));
+
+    assert(x == 13);
+
+    //auto one_ignore = foo::make_tuple(foo::ignore);
+    //assert((std::is_empty<decltype(one_ignore)>::value));
+    using type1 = foo::__tuple_leaf_base<decltype(foo::ignore)>;
+    std::cout << "is_empty<__tuple_leaf_base>: " << std::is_empty<type1>::value << std::endl;
+
+    using type2 = foo::__tuple_leaf<0,decltype(foo::ignore)>;
+    std::cout << "is_empty<__tuple_leaf>: " << std::is_empty<type2>::value << std::endl;
+
+    using type3 = foo::__tuple_base<
+      foo::__tuple_index_sequence<0>,
+      decltype(foo::ignore)
+    >;
+    std::cout << "is_empty<__tuple_base>: " << std::is_empty<type3>::value << std::endl;
+
+    using type4 = foo::tuple<decltype(foo::ignore)>;
+    std::cout << "is_empty<tuple>: " << std::is_empty<type4>::value << std::endl;
+  }
+
   return 0;
 }
 

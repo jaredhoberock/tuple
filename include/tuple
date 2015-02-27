@@ -371,6 +371,17 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
     {}
 
 
+    //template<class... UTypes,
+    //         class = typename std::enable_if<
+    //           (sizeof...(Types) == sizeof...(UTypes)) &&
+    //           __tuple_and<
+    //             std::is_constructible<Types,const UTypes&>...
+    //            >::value
+    //         >::type>
+    //__TUPLE_ANNOTATION
+    //__tuple_base(const std::tuple<UTypes...>& other)
+    //  : __tuple_base{std::get<I>(other)...}
+    //{}
 
 
     __TUPLE_ANNOTATION
@@ -488,6 +499,20 @@ class __tuple_base<__tuple_index_sequence<I...>, Types...>
       return mutable_leaf<i>().mutable_get();
     }
 
+    //// enable conversion to Tuple-like things
+    //template<class... UTypes,
+    //         class = typename std::enable_if<
+    //           (sizeof...(Types) == sizeof...(UTypes)) &&
+    //           __tuple_and<
+    //             std::is_constructible<Types,const UTypes&>...
+    //            >::value
+    //         >::type>
+    //__TUPLE_ANNOTATION
+    //operator std::tuple<UTypes...> () const
+    //{
+    //  return std::tuple<UTypes...>(const_get<I>()...);
+    //}
+
   private:
     template<class... Args>
     __TUPLE_ANNOTATION
@@ -594,6 +619,18 @@ class tuple : private __tuple_base<__tuple_make_index_sequence<sizeof...(Types)>
       : super_t{std::move(other.base())}
     {}
 
+    //template<class... UTypes,
+    //         class = typename std::enable_if<
+    //           (sizeof...(Types) == sizeof...(UTypes)) &&
+    //             __tuple_and<
+    //               std::is_constructible<Types,const UTypes&>...
+    //             >::value
+    //         >::type>
+    //__TUPLE_ANNOTATION
+    //tuple(const std::tuple<UTypes...>& other)
+    //  : super_t{other}
+    //{}
+
     __TUPLE_ANNOTATION
     tuple& operator=(const tuple& other)
     {
@@ -661,6 +698,20 @@ class tuple : private __tuple_base<__tuple_make_index_sequence<sizeof...(Types)>
     {
       base().swap(other.base());
     }
+
+    //// enable conversion to Tuple-like things
+    //template<class... UTypes,
+    //         class = typename std::enable_if<
+    //           (sizeof...(Types) == sizeof...(UTypes)) &&
+    //           __tuple_and<
+    //             std::is_constructible<Types,const UTypes&>...
+    //            >::value
+    //         >::type>
+    //__TUPLE_ANNOTATION
+    //operator std::tuple<UTypes...> () const
+    //{
+    //  return static_cast<std::tuple<UTypes...>>(base());
+    //}
 
   private:
     template<class... UTypes>

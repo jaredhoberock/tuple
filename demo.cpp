@@ -192,6 +192,13 @@ int main()
     std::get<0>(t);
   }
 
+  {
+    auto t = foo::make_tuple(1, 13., std::string("hello"));
+    assert(std::get<int>(t) == 1);
+    assert(std::get<double>(t) == 13.);
+    assert(std::get<std::string>(t) == "hello");
+  }
+
   return 0;
 }
 

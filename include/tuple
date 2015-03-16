@@ -855,14 +855,14 @@ namespace __TUPLE_NAMESPACE
 
 
 __TUPLE_ANNOTATION
-  bool __tuple_all()
+  inline bool __tuple_all()
 {
   return true;
 }
 
 
 __TUPLE_ANNOTATION
-  bool __tuple_all(bool t)
+  inline bool __tuple_all(bool t)
 {
   return t;
 }

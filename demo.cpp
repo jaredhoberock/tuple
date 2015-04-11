@@ -19,7 +19,7 @@ int main()
   assert(std::tuple_size<type1>::value == 1);
   assert((
     std::is_same<
-      std::tuple_element_t<0,type1>,
+      typename std::tuple_element<0,type1>::type,
       int
     >::value
   ));
@@ -44,13 +44,13 @@ int main()
   assert(std::tuple_size<type2>::value == 2);
   assert((
     std::is_same<
-      std::tuple_element_t<0,type2>,
+      typename std::tuple_element<0,type2>::type,
       int
     >::value
   ));
   assert((
     std::is_same<
-      std::tuple_element_t<1,type2>,
+      typename std::tuple_element<1,type2>::type,
       float
     >::value
   ));

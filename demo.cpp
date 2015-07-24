@@ -1,6 +1,6 @@
 #define __TUPLE_NAMESPACE foo
 
-#include <tuple>
+#include <tuple.hpp>
 #include <iostream>
 #include <cassert>
 

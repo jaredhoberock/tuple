@@ -6,7 +6,9 @@
 
 int main()
 {
-  using type0 = foo::tuple<>;
+  using namespace foo;
+
+  using type0 = tuple<>;
   assert(std::tuple_size<type0>::value == 0);
   assert((std::is_empty<std::tuple_element<0,type0>>::value == true));
 
@@ -15,7 +17,7 @@ int main()
   assert(!(type0{} < type0{}));
   assert(!(type0{} > type0{}));
 
-  using type1 = foo::tuple<int>;
+  using type1 = tuple<int>;
   assert(std::tuple_size<type1>::value == 1);
   assert((
     std::is_same<
@@ -40,7 +42,7 @@ int main()
   assert(t1 <= t1);
   assert(t1 >= t1);
 
-  using type2 = foo::tuple<int, float>;
+  using type2 = tuple<int, float>;
   assert(std::tuple_size<type2>::value == 2);
   assert((
     std::is_same<
@@ -111,7 +113,7 @@ int main()
     >::value
   ));
       
-  using type3 = foo::tuple<int,int,int>;
+  using type3 = tuple<int,int,int>;
   type3 t5(1,2,3);
   assert(std::get<0>(t5) == 1);
   assert(std::get<1>(t5) == 2);
@@ -137,7 +139,7 @@ int main()
   assert(t5 <= t6);
   assert(t5 >= t6);
 
-  using type4 = foo::tuple<type3,type3>;
+  using type4 = tuple<type3,type3>;
   type4 t7(type3(1,2,3), type3(4,5,6));
   assert(std::get<0>(std::get<0>(t7)) == 1);
   assert(std::get<1>(std::get<0>(t7)) == 2);
@@ -153,51 +155,53 @@ int main()
   assert(std::get<2>(t5) == 3);
 
   int a, b, c;
-  foo::tie(a,b,c) = t5;
+  tie(a,b,c) = t5;
   assert(a == 1);
   assert(b == 2);
   assert(c == 3);
 
-  assert(foo::tie(a,b,c) == t5);
-  assert(foo::tie(a,b,c) <= t5);
-  assert(foo::tie(a,b,c) >= t5);
+  assert(tie(a,b,c) == t5);
+  assert(tie(a,b,c) <= t5);
+  assert(tie(a,b,c) >= t5);
 
-  auto t9 = foo::make_tuple(std::string("hi"));
-  foo::tuple<std::string> t10;
+  auto t9 = make_tuple(std::string("hi"));
+  tuple<std::string> t10;
   t10 = std::move(t9);
   assert(std::get<0>(t9) == "");
   assert(std::get<0>(t10) == "hi");
 
-  assert(foo::make_tuple(1,2,3) < foo::make_tuple(1,2,4));
-  assert(foo::make_tuple(1,2,4) > foo::make_tuple(1,2,3));
+  assert(make_tuple(1,2,3) < make_tuple(1,2,4));
+  assert(make_tuple(1,2,4) > make_tuple(1,2,3));
 
-  auto x = foo::tie(b);
+  auto x = tie(b);
   x = x;  // ensure that tuple<tuple<int,int,int>&>::operator=(tuple<tuple<int,int,int>&>) has not been deleted
 
   {
     int x;
-    foo::tie(x, foo::ignore) = foo::make_tuple(13, std::string("hello"));
+    tie(x, ignore) = make_tuple(13, std::string("hello"));
     assert(x == 13);
 
     // XXX don't know how to make this work
-    //auto one_ignore = foo::make_tuple(foo::ignore);
+    //auto one_ignore = make_tuple(ignore);
     //assert((std::is_empty<decltype(one_ignore)>::value));
 
-    //auto two_ignore = foo::make_tuple(foo::ignore, foo::ignore);
+    //auto two_ignore = make_tuple(ignore, ignore);
     //assert((std::is_empty<decltype(two_ignore)>::value));
   }
 
   {
-    auto t = foo::make_tuple(foo::ignore, foo::make_tuple(foo::ignore));
+    auto t = make_tuple(ignore, make_tuple(ignore));
     std::get<0>(t);
   }
 
   {
-    auto t = foo::make_tuple(1, 13., std::string("hello"));
+    auto t = make_tuple(1, 13., std::string("hello"));
     assert(std::get<int>(t) == 1);
     assert(std::get<double>(t) == 13.);
     assert(std::get<std::string>(t) == "hello");
   }
+
+  std::cout << "OK" << std::endl;
 
   return 0;
 }

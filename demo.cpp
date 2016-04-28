@@ -181,17 +181,18 @@ int main()
     tie(x, ignore) = make_tuple(13, std::string("hello"));
     assert(x == 13);
 
-    // XXX don't know how to make this work
-    //auto one_ignore = make_tuple(ignore);
-    //assert((std::is_empty<decltype(one_ignore)>::value));
+    auto one_ignore = make_tuple(ignore);
+    assert((std::is_empty<decltype(one_ignore)>::value));
 
-    //auto two_ignore = make_tuple(ignore, ignore);
-    //assert((std::is_empty<decltype(two_ignore)>::value));
+    auto two_ignore = make_tuple(ignore, ignore);
+    assert((std::is_empty<decltype(two_ignore)>::value));
   }
 
   {
-    auto t = make_tuple(ignore, make_tuple(ignore));
-    std::get<0>(t);
+    auto nested_empty = make_tuple(ignore, make_tuple(ignore));
+    std::get<0>(nested_empty);
+
+    assert((std::is_empty<decltype(nested_empty)>::value));
   }
 
   {

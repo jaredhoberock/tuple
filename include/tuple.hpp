@@ -732,7 +732,7 @@ class tuple
     __TUPLE_ANNOTATION
     tuple& operator=(const tuple<UTypes...>& other)
     {
-      base().operator=(other.base());
+      base().operator=(std::move(other.base()));
       return *this;
     }
 

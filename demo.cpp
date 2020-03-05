@@ -1,4 +1,6 @@
-#define __TUPLE_NAMESPACE foo
+#define TUPLE_NAMESPACE foo
+#define TUPLE_NAMESPACE_OPEN_BRACE namespace foo {
+#define TUPLE_NAMESPACE_CLOSE_BRACE }
 
 #include "include/tuple.hpp"
 #include <iostream>
